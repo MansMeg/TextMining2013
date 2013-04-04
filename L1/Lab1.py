@@ -236,5 +236,5 @@ import geometry
 import os
 os.getcwd()
 reload(geometry)
-print "Triangle area(2,3) = %s " % geometry.Triangle(2.4,3.5)
+print "Triangle area(2,3) = %s " % geometry.Triangle(2,3)
 #help(reload)

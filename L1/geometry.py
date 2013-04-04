@@ -13,7 +13,7 @@ def area(radius):
     """
     from math import pi
     if radius<0:
-        print "None!"
+        return None
     else:        
         return radius**2*pi
 
