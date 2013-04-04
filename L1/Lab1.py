@@ -87,6 +87,8 @@ for name in names:
 names = ["Ludwig","Rosa","Mona","Amadeus"]
 nLetters = map(len,names)
 
+print "Nr Letters in names: %s" % nLetters
+
 nLetters = []
 for name in names:
     nLetters.append(len(name))
@@ -159,7 +161,6 @@ for output in students.items():
     print "Student %s scored %d on the Algebra exam and %d on the Histry exam"\
     % (output[0],output[1]["History"],output[1]["Algebra"])
 
-
 # 4. Vectors and arrays
 # (a) Define two lists: list1 = [1,3,4] and list2 = [5,6,9]. Try 
 # list1*list2. Does it work?
@@ -183,9 +184,16 @@ import numpy as nu
 # Try matrix1*matrix2. Why doesn’t this work?
 matrix1 = nu.array([list1,list2])
 matrix2 = nu.diag([1,2,3])
-print nu.multiply(matrix1,matrix2[0:2])
+
+# The below does not work
+# nu.multiply(matrix1,matrix2)
 print "Multiplying matrix1 and matrix2 does not work since multiply does \
 element wise multiplication and hence dimesions must match"
+
+# But the below does since dimensions match 
+print "Multiplying matrix1 and matrix2[0:2]) does work since dimesions match"
+print nu.multiply(matrix1,matrix2[0:2])
+
 # It multiply elementwise
 print matrix1
 print matrix2
@@ -194,8 +202,8 @@ type(matrix2)
 
 # (d) Compute the usual matrix product of matrix1 and matrix2.
 import numpy as np
-print "np.dot(matrix1,matrix2) = %s" % np.dot(matrix1,matrix2)
-print "(np.matrix(matrix1) * matrix2) = %s" % (np.matrix(matrix1) * matrix2)
+print "np.dot(matrix1,matrix2) = \n%s" % np.dot(matrix1,matrix2)
+print "(np.matrix(matrix1) * matrix2) = \n%s" % (np.matrix(matrix1) * matrix2)
 print "numpy overrides the '*' operator for matrices"
 
 # 5. Functions
