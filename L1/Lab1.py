@@ -8,7 +8,7 @@ Created on Wed Apr  3 10:33:20 2013
 # Import libaries
 import re
 import random
-dir(random)
+#dir(random)
 
 # 1
 # (a) Define the variable
@@ -16,9 +16,9 @@ parrot = "It is dead, that is what is wrong with it."
 # (b) Count the number of characters (letters, blank space, commas, 
 # periods etc) in the sentence.
 len(parrot)
-help(map)
-help(re.findall)
-help('lambda')
+#help(map)
+#help(re.findall)
+#help('lambda')
 
 char = len(re.findall("[A-Za-z]",parrot))
 blanks = len(re.findall(" ",parrot))
@@ -30,13 +30,14 @@ print "There are %s characters, %s blanks, %s commas and %s punctuation" \
 # (c) Write code that counts the number of letters in the sentence.
 # w word constituence. \W
 char = len(re.findall("\w",parrot))
+print "There are %s chars in parrot" % char
 
 # (d) Separate the sentence into a list of words. Call the list ParrotWords.
 # ?split(parrot)
 ParrotWords = parrot.split()
 
 # (e) Merge (concatenate) ParrotWords into a sentence again.
-" ".join(ParrotWords)
+print "Parrot splitted and joined: %s" % " ".join(ParrotWords)
 
 
 # 3
@@ -46,7 +47,7 @@ ParrotWords = parrot.split()
 # ...
 # The next number in the loop is 10
 # [Hint: the range() function has more than one argument].
-help(range)
+#help(range)
 for i in range(4,10):
     print "The next number in the loop is %d" % (i + 1) 
 
@@ -76,8 +77,8 @@ names = ["Ludwig","Rosa","Mona","Amadeus"]
 for name in names:
     print "The name %s is nice" % (name) 
     
-help(format)
-help("%")
+#help(format)
+#help("%")
 # (d) Write a for-loop that iterates over the list
 # names = [’Ludwig’,’Rosa’,’Mona’,’Amadeus’] and produces the list
 # nLetters = [6,4,4,7] that counts the letters in each name.
@@ -113,7 +114,7 @@ shortLong = ["long" if len(text)>=5 else "short" for text in names ]
 # ...
 # The next Amadeus is a long name
 # [Hint: use the zip() function and Python’s string formatting.
-help(zip)
+#help(zip)
 for name in zip(names,shortLong):
     print "The name %s is a %s name" % name
 
@@ -152,8 +153,8 @@ students["Karl"] = {"sex":"M","History":10,"Algebra":14}
 # ...
 # [Hints: Dictionaries are iterables. A really pretty solution involves 
 # the .items() method of a dictionary]
-help(items)
-dir(dict)
+#help(dict.items)
+#dir(dict)
 for output in students.items():
     print "Student %s scored %d on the Algebra exam and %d on the Histry exam"\
     % (output[0],output[1]["History"],output[1]["Algebra"])
@@ -164,30 +165,38 @@ for output in students.items():
 # list1*list2. Does it work?
 list1 = [1,3,4]
 list2 = [5,6,9]
-list1*list2
-# Nope
+# list1*list2
+print "list1*list1 does not work, since the '*' operator is not overridden for \
+lists"
+# Nope, the above does not work
 
 # (b) Import everything from scipy (from scipy import *). Convert list1 
 # and list2 into arrays (name them array1 and array2). Now try array1*array2.
 import scipy as sp
 array1 = sp.array(list1)
 array2 = sp.array(list2)
-array1 * array2
+print "array * array is = %s" % (array1 * array2)
 
+import numpy as nu
 # (c) Let matrix1 be a 2-by-3 array with array1 and array2 as its two 
 # rows. Let matrix2 be a diagonal matrix with elements 1, 2 and 3. 
 # Try matrix1*matrix2. Why doesn’t this work?
-matrix1 = array([list1,list2])
-matrix2 = identity(3)
-multiply(matrix1,matrix2)
+matrix1 = nu.array([list1,list2])
+matrix2 = nu.diag([1,2,3])
+#nu.multiply(matrix1,matrix2)
+print "Multiplying matrix1 and matrix2 does not work since matrix1 is not \
+a matrix, only an array "
 # It multiply elementwise
+print matrix1
+print matrix2
 type(matrix1)
 type(matrix2)
 
 # (d) Compute the usual matrix product of matrix1 and matrix2.
 import numpy as np
-np.dot(matrix1,matrix2)
-
+print "np.dot(matrix1,matrix2) = %s" % np.dot(matrix1,matrix2)
+print "(np.matrix(matrix1) * matrix2) = %s" % (np.matrix(matrix1) * matrix2)
+print "numpy overrides the '*' operator for matrices"
 
 # 5. Functions
 # (a) Write a function CircleArea(radius) that computes the area of a 
@@ -198,7 +207,7 @@ def area(radius):
     from math import pi
     return radius**2*pi
 
-area(-3)
+print "Area(-3) = %s" % area(-3)
 
 # (b) Modify the CircleArea function so that it checks it the radius is 
 # positive and prints The radius must be positive to the screen if it 
@@ -206,11 +215,12 @@ area(-3)
 
 def area(radius):
     if radius<0:
-        print "None!"
+        return None
     else:
         from math import pi
         return radius**2*pi
 
+print "Area(-3) = %s" % area(-3)
 
 # (c) Now write another function RectangleArea(base,height) that computes the 
 # area of a rectangle. Put both functions in a text file named Geometry.py. 
@@ -223,8 +233,8 @@ import geometry
 # (d) Now define another function in your Geometry module that computes the 
 # area of a triangle. Try to import the new function from the module. Why 
 # does it not work? [Hint: try import imp followed by imp.reload(Geometry)]
-
+import os
 os.getcwd()
 reload(geometry)
-geometry.Triange(2,1)
-help(reload)
+print "Triangle area(2,3) = %s " % geometry.Triangle(2.4,3.5)
+#help(reload)
