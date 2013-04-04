@@ -183,7 +183,7 @@ import numpy as nu
 # Try matrix1*matrix2. Why doesn’t this work?
 matrix1 = nu.array([list1,list2])
 matrix2 = nu.diag([1,2,3])
-#nu.multiply(matrix1,matrix2)
+#nu.multiply(matrix1,matrix2[0:2])
 print "Multiplying matrix1 and matrix2 does not work since matrix1 is not \
 a matrix, only an array "
 # It multiply elementwise
