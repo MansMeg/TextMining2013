@@ -40,15 +40,15 @@ plt.clf()
 plt.bar(x,y)
 plt.legend(y,loc='best')
 plt.title("Frequencies")
-#plt.show()
+plt.show()
 
 print "\n=== A 1.6 ====\n"
 vals = [poisson.pmf(Z,mu) for Z in range(14)]
 print vals
 plt.clf()
 plt.bar(range(14),vals)
-plt.title("Poissoon PMF")
-#plt.show()    
+plt.title("Poisson PMF")
+plt.show()    
 
 print "\n=== A 1.7 ====\n"
 from  scipy.stats import ttest_1samp
