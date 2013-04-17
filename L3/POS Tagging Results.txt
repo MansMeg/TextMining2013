@@ -1,0 +1,9 @@
+Correct POS Tagged on Stemmed Lowercase Words  : 231
+Correct POS Tagged on Unstemmed Lowercase Words: 280
+Skipped 39 words (i.e symbols such as ',.:...)
+Total Words: 374
+
+Results:
+	The estimated accuracy of POS tagger on Stemmed Lowercase words   = 231 / (374-39) = 69 %
+	The estimated accuracy of POS tagger on UnStemmed Lowercase words = 280 / (374-39) = 83 %
+        
