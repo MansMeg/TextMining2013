@@ -1,0 +1,111 @@
+\documentclass[a4paper]{article}
+
+\usepackage{graphicx}
+
+\begin{document}
+
+\section{Assignment 1}
+
+\subsection{Assignment 1.1}
+Extract some 3-500 words of main text content using NLTK tools. It is likely that you need to
+filter out some tabs and newlines. For this purpose the regular expression module (re) is
+useful. 
+
+We used the following code to clean the text:
+\begin{verbatim}
+text = re.sub("(\s|\n){2,}", ".\n", text)
+text = re.sub(r"[ \t]+",r" ",text)
+text = re.sub(r"^\s*$",r"",text,flags=re.MULTILINE)
+text = re.sub(r"\r",r"",text)
+\end{verbatim} 
+
+If you fail you may clean your text in an editor. (NLTK p. 80-86)
+
+We used the suggested text at:
+http://www.guardian.co.uk/politics/2013/apr/08/iron-lady-margaret-thatcher
+
+
+\subsection{Assignment 1.2}
+Segment, tokenize and (if needed) normalize the text. (NLTK, p. 104-113)
+
+
+\begin{verbatim}
+sent_tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
+sents = sent_tokenizer.tokenize(text)
+
+wnl = nltk.WordNetLemmatizer()
+
+for sentence in sents:
+    words = nltk.word_tokenize(sentence.lower())
+    Words = nltk.word_tokenize(sentence)
+    totWords += len(words)
+    lemmas = [wnl.lemmatize(t) for t in words]
+    # lemmatizitation only affects a few 's words
+    porter = nltk.PorterStemmer()
+    stemmedwords = [porter.stem(t) for t in words]
+    # To compare stemmed and unstemmed words
+    #print zip(words,stemmedWords)
+\end{verbatim} 
+
+\subsection{Assignment 1.3}
+Use one of the NLTK taggers to tag the text for parts-of-speech. Inspect the results and estimate its accuracy. (NLTK, p. 179-210)
+
+This is done by adding the following line of code to the loop above
+\begin{verbatim}
+	posTagStemmedwords = nltk.pos_tag(stemmedwords)
+\end{verbatim} 
+
+We manually POS tagged 374 words from the selected text and compared with the automatically POS tagged result from the NLTK toolkit.
+
+The results are summarized below: \\
+Correct POS Tagged on Stemmed Lowercase Words  : 231 \\
+Correct POS Tagged on Unstemmed Lowercase Words: 280 \\
+Skipped 39 words (i.e symbols such as ',.:...) \\
+Total Words: 374 \\
+The estimated accuracy of POS tagger on Stemmed Lowercase words: \\
+Accuracy = 231 / (374-39) = 69 \% \\
+The estimated accuracy of POS tagger on UnStemmed Lowercase words: \\
+Accuracy = 280 / (374-39) = 83 \% \\
+
+\subsection{Assignment 1.4}
+Apply the NLTK named-entity recognizer to the text.
+
+This is done by adding the following line of code in the loop:
+
+\begin{verbatim}
+	nerTagged = nltk.ne_chunk(posTagUnStemmedWords):
+\end{verbatim}
+
+Evaluate its performance using precision and recall. This means you have to identify names in the text and in the system
+output yourself. (NLTK, 239; 281-284)
+
+We manually NER tagged the selected text and found 89 Person references (first + second name or just one), 59 Geographical 
+references and 17 organizational references, this is summarized in the table below. These numbers are used as TP+FN in the 
+formula to calculate Precision and Recall.
+
+We then manually categorised the results of the automatic NER stemming as True Positives (TP) or False Positives (FP). 
+The tagger does not supply True or False Negatives.
+
+The results are summarized below. 
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | l |}
+    \hline
+           & PER              & GPE             & ORG \\ \hline
+    SUM    & TP = 57,  FP = 9 & TP = 44 FP = 26 & TP = 13,  FP = 17 \\ \hline
+	TP+FN  &     89           &     59          &      17           \\ \hline
+	Precision & 0,863636364   &  0,628571429    & 0,433333333 \\ \hline
+	Recall &  0,640449438     &  0,745762712    & 0,764705882 \\ \hline
+    \hline
+    \end{tabular}
+\end{center}
+                          
+
+\subsection{Assignment 1.5}
+Report the above and include a discussion of your observations on using the NLTK system.
+Both the POS stemmer and the NER tagger works better before applying stemming and lowercasing, 
+this makes sense since capitalized words for instance is often a strong hint that it is a
+name. 
+
+
+\end{document}
