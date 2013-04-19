@@ -7,11 +7,11 @@
 \section{Assignment 1}
 
 \subsection{Assignment 1.1}
-Extract some 3-500 words of main text content using NLTK tools. It is likely that you need to
-filter out some tabs and newlines. For this purpose the regular expression module (re) is
-useful. 
+\textit{Extract some 3-500 words of main text content using NLTK tools. It is
+likely that you need to filter out some tabs and newlines. For this
+purpose the regular expression module (re) is useful.}
 
-We used the following code to clean the text:
+We used the following code to clean the text using the re module in python:
 \begin{verbatim}
 text = re.sub("(\s|\n){2,}", ".\n", text)
 text = re.sub(r"[ \t]+",r" ",text)
@@ -19,43 +19,57 @@ text = re.sub(r"^\s*$",r"",text,flags=re.MULTILINE)
 text = re.sub(r"\r",r"",text)
 \end{verbatim} 
 
-If you fail you may clean your text in an editor. (NLTK p. 80-86)
-
-We used the suggested text at:
+For this exercise we used the suggested text at:
 http://www.guardian.co.uk/politics/2013/apr/08/iron-lady-margaret-thatcher
 
 
 \subsection{Assignment 1.2}
-Segment, tokenize and (if needed) normalize the text. (NLTK, p. 104-113)
+\textit{Segment, tokenize and (if needed) normalize the text. (NLTK, p. 104-113)}
 
+As the firs step we segmented the raw text data into separate
+sentances using the nltk package in python
+\begin{verbatim}
+# Segmenting
+sent_tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
+sents = sent_tokenizer.tokenize(raw)
+\end{verbatim} 
+
+We then tried both stemming and lemmatizing to ``get rid'' of the
+inflextions in the data. The main conclution were that the porter
+stemmer were much more aggressive than the lemmatizer. 
+
+For both the lemmatizer and the stemmer (Porter) the nltk packege in
+Python were used.
 
 \begin{verbatim}
-sent_tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
-sents = sent_tokenizer.tokenize(text)
-
+# Normalizing (stemming and lemming)
+porter = nltk.PorterStemmer()
 wnl = nltk.WordNetLemmatizer()
-
+Tokens = sentToken = sentTokenStem = sentTokenLem = []
 for sentence in sents:
-    words = nltk.word_tokenize(sentence.lower())
-    Words = nltk.word_tokenize(sentence)
-    totWords += len(words)
-    lemmas = [wnl.lemmatize(t) for t in words]
-    # lemmatizitation only affects a few 's words
-    porter = nltk.PorterStemmer()
-    stemmedwords = [porter.stem(t) for t in words]
-    # To compare stemmed and unstemmed words
-    #print zip(words,stemmedWords)
+    token = nltk.word_tokenize(sentence)
+    tokenStem = [porter.stem(t) for t in token]
+    lemmas = [wnl.lemmatize(t) for t in token]
+    sentToken.append(token)
+    sentTokenStem.append(tokenStem)
+    sentTokenLem.append(lemmas)
+    Tokens = Tokens + token
 \end{verbatim} 
 
 \subsection{Assignment 1.3}
-Use one of the NLTK taggers to tag the text for parts-of-speech. Inspect the results and estimate its accuracy. (NLTK, p. 179-210)
+\textit{Use one of the NLTK taggers to tag the text for parts-of-speech. Inspect the results and estimate its accuracy. (NLTK, p. 179-210)}
 
-This is done by adding the following line of code to the loop above
+This is done by adding the following lines of code i python:
 \begin{verbatim}
-	posTagStemmedwords = nltk.pos_tag(stemmedwords)
+POS = []
+stemPOS = []
+for sentence in sentToken:
+    POS.append(nltk.pos_tag(sentence))
+for sentence in sentTokenStem:
+    stemPOS.append(nltk.pos_tag(sentence))
 \end{verbatim} 
 
-We manually POS tagged 374 words from the selected text and compared with the automatically POS tagged result from the NLTK toolkit.
+We then manually POS tagged 374 words from the selected text and compared with the automatically POS tagged result from the NLTK toolkit.
 
 The results are summarized below: \\
 Correct POS Tagged on Stemmed Lowercase Words  : 231 \\
@@ -68,22 +82,29 @@ The estimated accuracy of POS tagger on UnStemmed Lowercase words: \\
 Accuracy = 280 / (374-39) = 83 \% \\
 
 \subsection{Assignment 1.4}
-Apply the NLTK named-entity recognizer to the text.
+\textit{Apply the NLTK named-entity recognizer to the text. Evaluate
+  its performance using precision and recall. This means you have to
+  identify names in the text and in the system output yourself. (NLTK, 239; 281-284)}
 
-This is done by adding the following line of code in the loop:
+The NER tagging using python were done using the following lines of code:
 
 \begin{verbatim}
-	nerTagged = nltk.ne_chunk(posTagUnStemmedWords):
+ner_tag = []
+ner_tag_stem = []
+for sentence in POS:
+    ner_tag.append(nltk.ne_chunk(sentence))
+for sentence in stemPOS:
+    ner_tag.append(nltk.ne_chunk(sentence))
 \end{verbatim}
 
-Evaluate its performance using precision and recall. This means you have to identify names in the text and in the system
-output yourself. (NLTK, 239; 281-284)
-
 We manually NER tagged the selected text and found 89 Person references (first + second name or just one), 59 Geographical 
-references and 17 organizational references, this is summarized in the table below. These numbers are used as TP+FN in the 
-formula to calculate Precision and Recall.
+references and 17 organizational references, this is summarized in the
+table below.
+
+These numbers are used as TP+FN in the formula to calculate Precision and Recall.
 
 We then manually categorised the results of the automatic NER stemming as True Positives (TP) or False Positives (FP). 
+
 The tagger does not supply True or False Negatives.
 
 The results are summarized below. 
@@ -102,10 +123,11 @@ The results are summarized below.
                           
 
 \subsection{Assignment 1.5}
-Report the above and include a discussion of your observations on using the NLTK system.
-Both the POS stemmer and the NER tagger works better before applying stemming and lowercasing, 
-this makes sense since capitalized words for instance is often a strong hint that it is a
-name. 
+\textit{Report the above and include a discussion of your observations on
+using the NLTK system.}
 
+Both the POS stemmer and the NER tagger works better before applying
+stemming and lowercasing and this makes sense since capitalized words
+for instance is often a strong hint that it is a name, company etc. 
 
 \end{document}
