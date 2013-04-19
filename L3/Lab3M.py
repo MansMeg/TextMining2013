@@ -34,13 +34,10 @@ raw = re.sub("[\t\r\x01\n]",".\n ",raw)
 # Segmenting
 sent_tokenizer=nltk.data.load('tokenizers/punkt/english.pickle')
 sents = sent_tokenizer.tokenize(raw)
-
+# Normalizing (stemming and lemming)
 porter = nltk.PorterStemmer()
 wnl = nltk.WordNetLemmatizer()
-Tokens = []
-sentToken = []
-sentTokenStem = []
-sentTokenLem = []
+Tokens = sentToken = sentTokenStem = sentTokenLem = []
 for sentence in sents:
     token = nltk.word_tokenize(sentence)
     tokenStem = [porter.stem(t) for t in token]
@@ -56,7 +53,6 @@ POS = []
 stemPOS = []
 for sentence in sentToken:
     POS.append(nltk.pos_tag(sentence))
-
 for sentence in sentTokenStem:
     stemPOS.append(nltk.pos_tag(sentence))
 
