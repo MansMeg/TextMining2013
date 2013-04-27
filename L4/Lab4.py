@@ -2,7 +2,7 @@
 Created on Apr 27, 2013
 
 A simple parallelized web crawler that indexes Google Play and
-App Brain.
+App Brain (not fully implemented yet)
 
 It does not respect robots.txt, but tries to play nice by having
 a random delay of a few seconds so as not to overload sites with
@@ -218,15 +218,15 @@ print 'Pressing Ctrl+C will cleanly abort program...'
 
 print("Starting Google Play link finder...")
 # Create the threads to find links
-gplf = threading.Thread(target=gp_link_finder, args=(google_play,)) # UUUUGly, the last comma is needed!
+gplf = threading.Thread(target=gp_link_finder, args=(google_play,)) # UUUUGly, the last comma is needed in args list
 gplf.daemon = True
-#ablf = Thread(target=ab_link_finder(app_brain))
+#ablf = Thread(target=ab_link_finder, args(app_brain,))
 #ablf.daemon = True
 
 gplf.start()
 #ablf.start()
         
-# How many threads we want to run
+# How many downloader threads we want to run
 downloader_threads = max(multiprocessing.cpu_count() / 2, 1)
 print("Using {0} downloader threads...".format(downloader_threads))
 
@@ -240,8 +240,5 @@ for i in range(downloader_threads):
 while urlcnt < 1000:
     time.sleep(1)
     
-#for item in source():
-#    q.put(item)
-
 link_queue.join()       # block until all tasks are done
 write_downloaded_links()
