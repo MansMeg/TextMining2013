@@ -8,6 +8,8 @@ First skeleton of and Indexer that builds an inverted index
 
 import os
 import nltk
+import re
+from collections import defaultdict
 
 basedir = os.path.dirname(os.path.realpath(__file__))
 
@@ -16,14 +18,20 @@ texts = os.listdir(basedir)
 
 index = {}
 
+porter = nltk.PorterStemmer()
 for text in enumerate(texts):
     raw = open(basedir + text[1]).read()
     tokens = nltk.word_tokenize(raw.lower())
+    tokens = [re.sub("[-*.='/+]", "",t) for t in tokens]
+    tokens = [porter.stem(t) for t in tokens]
     for token in tokens:
         if token in index:
-            index[token] = {"tf":(index[token]["tf"]+1), "docs":list(set(index[token]["docs"]+[text[0]]))}
+            d = index[token]["tf"]
+            d[text[0]] += 1
         else:
-            index[token] = {"tf":1, "docs":[text[0]]}
+            d = defaultdict(int)
+            d[text[0]] = 1
+        index[token] = {"tf":d}
             
-for token in index.keys():
+for token in sorted(index.keys()):
     print "{0} => {1}".format(token,index[token])
