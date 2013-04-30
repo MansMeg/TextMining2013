@@ -14,9 +14,8 @@ import re
 from collections import defaultdict
 import math
 
-texts = []
-porter = nltk.PorterStemmer()
-
+texts   = []
+porter  = nltk.PorterStemmer()
 basedir = os.path.dirname(os.path.realpath(__file__))
 basedir = basedir + "/texts/"
 
@@ -27,9 +26,7 @@ def calc_inverted_index():
     global texts 
     global basedir
     texts = os.listdir(basedir)
-    
     index = {}
-    
     for text in enumerate(texts):
         raw = open(basedir + text[1]).read()
         tokens = nltk.word_tokenize(raw.lower())
@@ -44,7 +41,7 @@ def calc_inverted_index():
             index[token] = d
     return index
 
-def calc_query_tf(tokens):
+def calc_tf(tokens):
     d = defaultdict(int)
     for token in tokens:
         if token in index:
@@ -53,12 +50,6 @@ def calc_query_tf(tokens):
             d[token] = 1
     return d
         
-index = calc_inverted_index()
-
-for token in sorted(index.keys()):
-    print "{0} => {1}".format(token,index[token])
-    
-
 def query_index(query,k):
     '''
     This is an implementation of the CosineScore(q) algorithm
@@ -67,24 +58,21 @@ def query_index(query,k):
     global texts
     tokens = nltk.word_tokenize(query.lower())
     tokens = [prune_token(t) for t in tokens]
-    tfs = calc_query_tf(tokens)
-    print "Tfs {0}".format(tfs)
+    tfs = calc_tf(tokens)
+    print "Query token frequencies {0}".format(tfs)
     scores = defaultdict(int)
     N = len(texts)
     for t in set(tokens):
-        # do calculate wt;q
+        # do calculate wtq
+        wtq = (1 + math.log(tfs[t])) * math.log(len(tokens)/1)
         # and fetch postings list for t
         postings = index.get(t,{})
-        #print "Postings for {0} => {1} ({2})".format(t, postings, type(postings))
         #for each pair(d; tft;d ) in postings list
-        #do Scores[d]+ = wt;d  wt;q
         for doc in postings.items():
             dft = len(postings)
-            #print "Tf of {0} in doc {1} is {2}".format(t,doc[0],doc[1])
             wtd = (1 + math.log(doc[1])) * math.log(N/dft)
-            wtq = (1 + math.log(tfs[t])) * math.log(len(tokens)/1)
+            #do Scores[d]+ = wtd  * wtq
             scores[doc[0]] += wtd * wtq
-            #print "Score of {0} is {1}".format(doc[0],scores[doc[0]])
     return sorted(scores, key=scores.get, reverse=True)[0:k]
             
 def block_format(desc):
@@ -97,14 +85,27 @@ def block_format(desc):
     newdesc += "\t" + subdesc
     return newdesc
 
-query = 'realistic car racing game from zynga with realistic cars from saab'
-k = 10
-score_sorted_texts = query_index(query,k)
+def do_query(query):
+    k = 10
+    score_sorted_texts = query_index(query,k)
+    print "Top {0} documents for query: {1}".format(k,query)
+    for index in enumerate(score_sorted_texts):
+        print "{0} => {1}".format(index[0],texts[index[1]])
+        desc = open(basedir + texts[index[1]]).read()
+        print "{0}\n".format(block_format(desc))
+    
+# =========== PROGRAM START =============    
+index = calc_inverted_index()
 
-print "Top {0} documents for query: {1}".format(k,query)
-for index in enumerate(score_sorted_texts):
-    print "{0} => {1}".format(index[0],texts[index[1]])
-    desc = open(basedir + texts[index[1]]).read()
-    print "{0}\n".format(block_format(desc))
+#for token in sorted(index.keys()):
+#    print "{0} => {1}".format(token,index[token])
+    
+query1 = 'realistic car racing game from zynga with realistic cars from saab'
+query2 = 'best ski sports game'
+query3 = 'ett dart spel kasta pil skytte'
+
+do_query(query1)
+do_query(query2)
+do_query(query3)
 
     
