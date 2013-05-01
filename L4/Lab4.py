@@ -10,6 +10,7 @@ requests
 
 @author: Leif Jonsson & Mans Magnusson
 '''
+
 import Queue
 import os
 from urllib import urlopen
@@ -23,6 +24,9 @@ import nltk
 import string
 import threading
 from HTMLParser import HTMLParser
+
+# Change WD to be able to version control 
+os.chdir("/Users/mansmagnusson/Desktop/Text Mining/Labs/TextMining2013/L4")
 
 # Booleans to control running threads
 link_finder_continue = True
@@ -43,6 +47,7 @@ downloaded_links_fn = "dl_links.txt"
 # Create the downloaded links file  if it does not exist
 if not os.path.exists(downloaded_links_fn):
     open(downloaded_links_fn, 'a').close()
+## M: Vad innebär "a" i detta sammanhang? Vad gör du här?
 
 # Hash table with all the downloaded links we have
 downloaded_links = {}
@@ -218,6 +223,7 @@ print 'Pressing Ctrl+C will cleanly abort program...'
 
 print("Starting Google Play link finder...")
 # Create the threads to find links
+## Vad menas med Threads?
 gplf = threading.Thread(target=gp_link_finder, args=(google_play,)) # UUUUGly, the last comma is needed in args list
 gplf.daemon = True
 #ablf = Thread(target=ab_link_finder, args(app_brain,))
