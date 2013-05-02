@@ -16,13 +16,14 @@ import math
 
 texts   = []
 porter  = nltk.PorterStemmer()
+## Vad gör du på raden nedanför?
 basedir = os.path.dirname(os.path.realpath(__file__))
 basedir = basedir + "/texts/"
 
 def prune_token(token):
     return porter.stem(re.sub("[-*.='/+]", "",token))
 
-def calc_inverted_index():
+def calc_inverted_index(): # Jag förstår inte riktigt hur detta index skapas.
     global texts 
     global basedir
     texts = os.listdir(basedir)
@@ -34,7 +35,7 @@ def calc_inverted_index():
         for token in tokens:
             if token in index:
                 d = index[token]
-                d[text[0]] = d[text[0]]+1
+                d[text[0]] = d[text[0]]+1 # Varför görs detta?
             else:
                 d = defaultdict(int)
                 d[text[0]] = 1
@@ -64,8 +65,9 @@ def query_index(query,k):
     N = len(texts)
     for t in set(tokens):
         # do calculate wtq
-        wtq = (1 + math.log(tfs[t])) * math.log(len(tokens)/1)
-        # and fetch postings list for t
+        wtq = (1 + math.log(tfs[t])) * math.log(len(tokens)/1) 
+        ## Ska inte den sista vara inversen? d.v.s. 1/len(tokens) Query är ju 1 dokument?
+        # and fetch postings list for t 
         postings = index.get(t,{})
         #for each pair(d; tft;d ) in postings list
         for doc in postings.items():
@@ -74,7 +76,9 @@ def query_index(query,k):
             #do Scores[d]+ = wtd  * wtq
             scores[doc[0]] += wtd * wtq
     return sorted(scores, key=scores.get, reverse=True)[0:k]
-            
+
+## Kanske göra en vektoriserad variant?
+
 def block_format(desc):
     newdesc = ""
     offset = 100
