@@ -1,0 +1,120 @@
+\documentclass[a4paper]{article}
+
+\usepackage{graphicx}
+
+\begin{document}
+\title{Computer Lab: Information retrieval}
+\author{Måns Magnusson, Leif Jonsson}
+
+\section{Step 1: App crawling}
+To implement the spider we created a parallelized web crawler that
+downloaded text from both App Brain and Google Play. To not overload
+pages with request the crawler were implemented with a few seconds
+delay for each queue.
+
+All text were downloaded and stored in a separate folder ``texts'' as
+.txt files and the spider continued to work until 1000 txt files were downloaded.
+
+The main problem with implementing this code was... ??? Leif?
+
+The python code for the spider can be found in verbatim \texttt{Lab4.py}. 
+
+
+\subsection{Step 2: Inverted index construction}
+\textit{Build inverted index on the texts. You will use NLTK to preprocess the text, such as tokenizing, normalizing, etc. Compute and store tf, df in the inverted index.}
+
+The calculation of the inverted index were done with the following
+code. The global variable \texttt{texts} is used to contain each
+txt file in a one list, this is also one within the function. The
+global variable \texttt{basedir} contains the directory to the folder
+containing the txt files downloaded by the web crawler.
+
+In the code the function \texttt{prune_tokens} is used, this function
+simply stems the tokens in the text data.
+
+During the implementation of this part there were no large problems encountered.
+
+The whole function for calculating the inverted index can be seen below:
+
+\begin{verbatim}
+def calc_inverted_index():
+    global texts 
+    global basedir
+    texts = os.listdir(basedir)
+    index = {}
+    for text in enumerate(texts):
+        raw = open(basedir + text[1]).read()
+        tokens = nltk.word_tokenize(raw.lower())
+        tokens = [prune_token(t) for t in tokens]
+        for token in tokens:
+            if token in index:
+                d = index[token]
+                d[text[0]] = d[text[0]]+1
+            else:
+                d = defaultdict(int)
+                d[text[0]] = 1
+            index[token] = d
+    return index
+\end{verbatim}
+
+
+\subsection{Step 3: Query processing}
+\textit{Write a ranked query processor using vector space model. The input parameter is the set of keywords and integer k, for top-k query answering. The query processor should compute the vector space similarities of the query to the documents. Top-k documents are returned according to the ranked similarity values.}
+
+The last section were the most complicated part of the assignment. The
+algorithm implemented were the one given in the lecture slides and it
+were implemented in python (see code below).
+
+One problem that were encountered was how to treat the calculation of
+the query idf-tf. Initially theis were done regarding the query as a
+seprate document:
+\[
+w_{t,d}=(1+\log(\mbox{tf}_{t,d}))\cdot\log\frac{N}{1}
+\]
+But later on we instead calculated the including the weight as with
+the other documents (but not regarding the query as a separate
+document) the following way:
+\[
+w_{t,d}=(1+\log(\mbox{tf}_{t,d}))\cdot\log\frac{N}{\mbox{df}_{t}}
+\]
+
+As a statistician (Måns) thought it was more difficult to understand
+(and in some sense to implement) the
+algorithmic description of the cosine similarity algorithm than the
+vectorized description of the cosine algorithm given in the lecture
+slides.
+
+In the code below we can see the implementation in python. The
+\texttt{index} object contains the inverted index calculated in step 2
+and the function \texttt{calc_tf} simply calculates the number of
+different terms in the query.
+
+\begin{verbatim}
+def query_index(query,k):
+    '''
+    This is an implementation of the CosineScore(q) algorithm
+    '''
+    global index
+    global texts
+    tokens = nltk.word_tokenize(query.lower())
+    tokens = [prune_token(t) for t in tokens]
+    tfs = calc_tf(tokens)
+    print "Query token frequencies {0}".format(tfs)
+    scores = defaultdict(int)
+    N = len(texts)
+    for t in set(tokens):
+        # do calculate wtq
+        wtq = (1 + math.log(tfs[t])) * math.log(len(tokens)/1) 
+        # and fetch postings list for t 
+        postings = index.get(t,{})
+        #for each pair(d; tft;d ) in postings list
+        for doc in postings.items():
+            dft = len(postings)
+            wtd = (1 + math.log(doc[1])) * math.log(N/dft)
+            #do Scores[d]+ = wtd  * wtq
+            scores[doc[0]] += wtd * wtq
+    return sorted(scores, key=scores.get, reverse=True)[0:k]
+\end{verbatim}
+
+
+\end{document}

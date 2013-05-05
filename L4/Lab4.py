@@ -25,9 +25,6 @@ import string
 import threading
 from HTMLParser import HTMLParser
 
-# Change WD to be able to version control 
-# os.chdir("/Users/mansmagnusson/Desktop/Text Mining/Labs/TextMining2013/L4")
-
 # Booleans to control running threads
 link_finder_continue = True
 downloader_continue  = True
