@@ -26,7 +26,7 @@ import threading
 from HTMLParser import HTMLParser
 
 # Change WD to be able to version control 
-os.chdir("/Users/mansmagnusson/Desktop/Text Mining/Labs/TextMining2013/L4")
+# os.chdir("/Users/mansmagnusson/Desktop/Text Mining/Labs/TextMining2013/L4")
 
 # Booleans to control running threads
 link_finder_continue = True
@@ -47,7 +47,7 @@ downloaded_links_fn = "dl_links.txt"
 # Create the downloaded links file  if it does not exist
 if not os.path.exists(downloaded_links_fn):
     open(downloaded_links_fn, 'a').close()
-## M: Vad innebär "a" i detta sammanhang? Vad gör du här?
+## M: Vad innebar "a" i detta sammanhang? What are you doing here?
 
 # Hash table with all the downloaded links we have
 downloaded_links = {}

@@ -103,7 +103,7 @@ index = calc_inverted_index()
 
 #for token in sorted(index.keys()):
 #    print "{0} => {1}".format(token,index[token])
-    
+
 query1 = 'realistic car racing game from zynga with realistic cars from saab'
 query2 = 'best ski sports game'
 query3 = 'ett dart spel kasta pil skytte'
