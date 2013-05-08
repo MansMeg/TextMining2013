@@ -44,7 +44,6 @@ downloaded_links_fn = "dl_links.txt"
 # Create the downloaded links file  if it does not exist
 if not os.path.exists(downloaded_links_fn):
     open(downloaded_links_fn, 'a').close()
-## M: Vad innebar "a" i detta sammanhang? What are you doing here?
 
 # Hash table with all the downloaded links we have
 downloaded_links = {}
@@ -228,7 +227,8 @@ gplf.daemon = True
 
 gplf.start()
 #ablf.start()
-        
+
+
 # How many downloader threads we want to run
 downloader_threads = max(multiprocessing.cpu_count() / 2, 1)
 print("Using {0} downloader threads...".format(downloader_threads))
