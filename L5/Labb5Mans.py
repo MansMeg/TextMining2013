@@ -5,8 +5,8 @@
 
 # Preparations
 import nltk
-from Labb5Functions import my_classify_results,document_features_b,document_features_a
 from random import shuffle, seed
+from Labb5Functions import my_classify_results,document_features_b,document_features_a
 # from string import punctuation
 # from re import sub, search
 # from nltk.corpus import stopwords
@@ -14,7 +14,7 @@ from random import shuffle, seed
 
 # Functions is in a separate file 
 
-# Part A
+# Read in data
 from nltk.corpus import movie_reviews
 reviews = [(list(movie_reviews.words(fileid)), category)
             for category in movie_reviews.categories()
@@ -22,6 +22,7 @@ reviews = [(list(movie_reviews.words(fileid)), category)
 seed(20130510)
 shuffle(reviews)
 
+# Part A
 # We use the code from the example in the book
 all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
 word_feat = all_words.keys()[:1000]
@@ -95,7 +96,7 @@ print my_classify_results(test_true,test_classifed)
 
 
 # Part C
-# We use the code from the example in the book
+# We use the same code as above
 all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
 word_feat = all_words.keys()[:1000]
 
@@ -123,8 +124,13 @@ print my_classify_results(test_true,test_classifed)
 #The reason for this is that the naive classifier have problems when there are lot 
 #of rare events and these rare events is distorting the results rather than improving
 #the bayesian classifier.
+# It is difficult to correct this for every single document.
 
 
+# Part D)
+all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
+word_feat = all_words.keys()[10000]
+tdfidf_dict,idf = idf(reviews,word_feat)
+word_feat = [word for word in idf.most_common(1000)]
 
-
-
+featureset = [(document_features_a(d,word_feat), c) for (d,c) in reviews]

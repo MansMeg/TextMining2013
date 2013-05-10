@@ -18,9 +18,6 @@ def cut(to_cut,cut_values,max_val=None):
             ret.append(max_val)
     return ret
 
-true_values = test_true
-classified_values = test_classifed
-
 def my_classify_results(true_values,classified_values):
     from nltk import ConfusionMatrix
     cm = ConfusionMatrix(true_values, classified_values)
@@ -33,6 +30,13 @@ def my_classify_results(true_values,classified_values):
     return "Accuracy : %s\nPrecision : %s\nRecall : %s\nF-value : %s" % ((tp+tn)/allres, precision, recall, 2*precision*recall/(precision+recall))
 
 def document_features_a(document,word_feat):
+    document_words = set(document)
+    features = {}
+    for word in word_feat:
+        features['contains(%s)' % word] = (word in document_words)
+    return features
+
+def document_features_d(document,word_feat,limit): # Do own tdfidf limit
     document_words = set(document)
     features = {}
     for word in word_feat:
@@ -92,3 +96,22 @@ def document_features_b(document,word_feat,tdf_id_feat=False,tdf_id_dict={},cont
                 features['wrd(%s)(%s)' % (word, part)] = part == wrd_cut[0]    
     return features
 
+def idf(doc_list,terms):
+    from collections import Counter
+    from math import log
+    cnt = Counter()
+    tdf = {}
+    w = {}
+    for doc in enumerate(doc_list):
+        doc_set = set(doc[1][0])
+        cnt.update(doc_set.intersection(set(terms)))
+        tdf[str(doc[0])] = Counter(doc_set.intersection(set(terms)))
+        for key in tdf[str(doc[0])].keys():
+            tdf[str(doc[0])][key] = 1 + log(tdf[str(doc[0])][key])
+    for key in cnt.keys():
+        cnt[key] = log(len(doc_list)/cnt[key])
+    for doc_no in range(len(doc_list)):
+        w[str(doc_no)] = {}
+        for key in terms:
+            w[str(doc_no)][key] = tdf[str(doc_no)][key] * cnt[key]
+    return w, cnt
