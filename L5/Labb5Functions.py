@@ -115,7 +115,7 @@ def idf(doc_list,terms):
     return w
 
 
-def document_features_posneg(document,pos_set,neg_set):
+def document_features_posneg(document,pos_set,neg_set,contain_word=False,word_feat=None):
     word_cnt_cut = [11,15,18,22,25,29,32,38,45,999]
     #[   1.,   15.,   22.,   29.,   37.,  131.]
     #[  0.,  16.,  22.,  29.,  38.,  95.]
@@ -136,6 +136,10 @@ def document_features_posneg(document,pos_set,neg_set):
     for part in word_cnt_cut:
        features['pos_cut_(%s)' % part] = part == pos_cut[0]
        features['neg_cut_(%s)' % part] = part == neg_cut[0]
+    if contain_word:
+        document_words = set(document)
+        for word in word_feat:
+            features['contains(%s)' % word] = (word in document_words)    
     
     return features #,pos_cnt,neg_cnt
 

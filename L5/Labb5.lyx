@@ -349,6 +349,112 @@ target "http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon"
 .
 \end_layout
 
+\begin_layout Standard
+The positive and negative word lexical method were used simply by counting
+ the number of positive and negative words in each document.
+ The number of positive and negative words were then categorized into 10
+ bins (based on the quantiles) and used as features.
+ By only using the counts of positive and negative words the classification
+ accuracy were quite high:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.65 
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.645161290323 
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.618556701031 
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.631578947368
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When we included the 1000 most common words in the classifieras (as in a)
+ together with the counts of positive and negative word the classifier is
+ a little better than the classifier in a, but not much better.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.7675 
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.758974358974 
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.762886597938 
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.760925449871
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So the main conclution is that it is hard to get the classifier to do much
+ better than an accuracy of approximately 80%.
+\end_layout
+
 \begin_layout Section*
 d)
 \end_layout

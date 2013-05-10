@@ -172,7 +172,11 @@ pos_set = set(raw_pos.split("\n"))
 neg_set = set(raw_neg.split("\n"))
 
 # Feature set is created
+all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
+word_feats = all_words.keys()[:1000]
 featureset = [(document_features_posneg(d,pos_set,neg_set), c) for (d,c) in reviews]
+#featureset = [(document_features_posneg(d,pos_set,neg_set,contain_word=True,word_feat=word_feats), c) for (d,c) in reviews]
+
 # Feature set is devided in train, dev and test sets
 train_set, dev_set, test_set = featureset[600:],featureset[400:600], featureset[:400]
 classifier_posneg = nltk.NaiveBayesClassifier.train(train_set)
