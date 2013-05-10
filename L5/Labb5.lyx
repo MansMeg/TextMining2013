@@ -1,0 +1,433 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Computer lab: Statistical models for textual data
+\end_layout
+
+\begin_layout Author
+Måns Magnusson, Leif Jonsson
+\end_layout
+
+\begin_layout Section*
+a)
+\end_layout
+
+\begin_layout Standard
+We used the naive bayes classifier in the 
+\family typewriter
+nltk
+\family default
+ package to train a simple classifier on whether the movie rating were positive
+ or negative in the 
+\family typewriter
+movie_reviews
+\family default
+ corpus in the 
+\family typewriter
+nltk
+\family default
+ package.
+ All the code can be found in the two python files (one with the functions
+ and another with the main code).
+ 
+\end_layout
+
+\begin_layout Standard
+We used 10 % of the corpus (or the reviews) as a test set (randomly selected)
+ for testing the accuracy of the model.
+ We also set aside 5 % of the corpus to use as a development set to be able
+ to identify potential problems in the modeling of the data without studying
+ the results in the test set specifically.
+\end_layout
+
+\begin_layout Standard
+Using the naive bayesian classifier with the feature set 
+\family typewriter
+contains:[word]
+\family default
+ resulted in a quite good classifier (especially compared with the other
+ classifiers tested).
+ The result of this classifier were:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.7525 
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.7411
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.7526 
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.7468
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general for Måns it was a quite different way of representing features
+ in the model this way.
+ The way the features is expressed (as items in a hash table) is not very
+ common in the way featutres is expressed in machine learning and in statistics.
+ Is there any benefits of using this way of features definitions instead
+ of using an ordinary matrix notation? Leif?
+\end_layout
+
+\begin_layout Section*
+b)
+\end_layout
+
+\begin_layout Standard
+To improve the performance of the classifier were tried different ways of
+ normalizing the textual data.
+ We tried to remove 
+\begin_inset Quotes eld
+\end_inset
+
+uninteresting
+\begin_inset Quotes erd
+\end_inset
+
+ data such as stop words, punctuations and numbers.
+ By removing stopwords, punctuations and numbers the classifier were slightly
+ improved and we got the following results when classifying the test data:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.7725
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.7668
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.7629
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.7649
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+But when we used lemmatization and/or stemming with the same featureset
+ 
+\family typewriter
+contains:[word]
+\family default
+, we instead reduced the classifier accuracy.
+ The reason for this is that probably different inflextions of the same
+ word can have a limited effect in the classification when the inflextions
+ are removed.
+ One example of this is the word 
+\family typewriter
+fails
+\family default
+ that increases the likelihood of the category 
+\family typewriter
+neg
+\family default
+ by 2.3 while the word 
+\family typewriter
+fail
+\family default
+ do not have almost any effect on the likelihhod of the different cetegories.
+ So in the naive bayes classifier normalizing word using stemming and/or
+ lemmatization does not necessarily improves the classification performance.
+ And this is of course true for all classifiers, not just the naive bayes
+ classifier.
+ 
+\end_layout
+
+\begin_layout Standard
+It is interesting to see the effect of removing stop words, numbers and
+ punctuations.
+ By removing these tokens the classification accuracy were increased.
+ As a comparison, when another 1000 word/tokes were incuded (instead of
+ just 1000, 2000 were used), the accuracy were only increased to 0.79 from
+ 0.7525, so the naive bayesian classifier were hence better when noninformative
+ features were excluded.
+\end_layout
+
+\begin_layout Section*
+c)
+\end_layout
+
+\begin_layout Standard
+To continue with the modeling of the text data both document length and
+ avarage word length were included.
+ We also inluded the number of times a specific word were included in the
+ model.
+ The main problem that we encounter were that even though if there are many
+ words just including bins for the number of words in the models results
+ in two many features for the data with overfitting as a result.
+ There are just too many rare features that is used in the model.
+\end_layout
+
+\begin_layout Standard
+To reduce the risk of overfitting we only included the count of words with
+ the bins 0,1 and 2-, but even with this small addition to the number of
+ features the model were overfited with poor accuracy as a result.
+ This gave the following results:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.515
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.5
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.6134
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.5509
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To reduce the risk as much as possible we tried that instead of studying
+ the number of features this way we instead used a lexical approach were
+ we counted the number of positive words and negative words in each documents
+ and only used the number of these as features instead.
+ The negativ and positive words were found 
+\color blue
+
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon"
+
+\end_inset
+
+
+\color inherit
+.
+\end_layout
+
+\begin_layout Section*
+d)
+\end_layout
+
+\begin_layout Standard
+As a last thing we also tried using the tf-idf weighted features.
+ Since the results in c) resulted in that just adding one more bin than
+ compared with part a) the tf-idf weighted features would have the same
+ problem if the tf-idf features just were used instead of ordinary counts.
+\end_layout
+
+\begin_layout Standard
+Instead we tried to use the tf-idf to identify which features that is of
+ interest in the classification task.
+ So what we did was that we computed the tf-idf for all documents (or reviews).
+ We then summed the tf-idf for the negative documents and the positive documents
+ and calculated the difference between the sums of the two classes.
+ In a sence the purpose was to mimic the cosin similarity but at the term
+ level, but insted calculate 
+\begin_inset Quotes eld
+\end_inset
+
+cosine dissimilarity
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This resulted in that word such as boring, worse, realistic, superb etc
+ were identified as having the largest tf-idf difference between neg and
+ pos categories.
+ In the classifier where only the 50 words with the largest difference of
+ tf-idf were included gave a quite good classifying result:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{verbatim}
+\end_layout
+
+\begin_layout Plain Layout
+
+Accuracy : 0.7125 
+\end_layout
+
+\begin_layout Plain Layout
+
+Precision : 0.7158 
+\end_layout
+
+\begin_layout Plain Layout
+
+Recall : 0.6753 
+\end_layout
+
+\begin_layout Plain Layout
+
+F-value : 0.6950
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{verbatim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

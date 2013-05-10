@@ -2,7 +2,10 @@
 """
 @author: Måns Magnuson och Leif Jonsson
 """
-
+from collections import Counter,defaultdict
+from math import log
+from nltk import ConfusionMatrix
+from numpy import mean
 
 def cut(to_cut,cut_values,max_val=None):
     """Divide values of to_cut into classes given by cut_values"""
@@ -19,7 +22,6 @@ def cut(to_cut,cut_values,max_val=None):
     return ret
 
 def my_classify_results(true_values,classified_values):
-    from nltk import ConfusionMatrix
     cm = ConfusionMatrix(true_values, classified_values)
     tp,tn = cm.__getitem__(("pos","pos")),cm.__getitem__(("neg","neg"))
     fp,fn = cm.__getitem__(("neg","pos")),cm.__getitem__(("pos","neg"))
@@ -61,8 +63,6 @@ def document_features_d(document,word_feat,limit): # Do own tdfidf limit
 
 
 def document_features_b(document,word_feat,tdf_id_feat=False,tdf_id_dict={},contain_wrd=False):
-    import numpy
-    from collections import Counter
     doc_len_cut = [560, 745, 958, 999]
     av_word_cut = [3.8,3.93,4.06,9]
     word_cnt_cut = [1,2,9]
@@ -70,7 +70,7 @@ def document_features_b(document,word_feat,tdf_id_feat=False,tdf_id_dict={},cont
     # Doc length (in words)
     len_doc = cut([len(document[0])],doc_len_cut[0:3],doc_len_cut[3])
     # Average word length in review
-    av_word = cut([numpy.mean(map(len,document[0]))],av_word_cut[0:3],av_word_cut[3])
+    av_word = cut([mean(map(len,document[0]))],av_word_cut[0:3],av_word_cut[3])
     
     if tdf_id_feat: # Word counts/tdf-idf
         word_cnt = tdf_id_dict
@@ -97,8 +97,6 @@ def document_features_b(document,word_feat,tdf_id_feat=False,tdf_id_dict={},cont
     return features
 
 def idf(doc_list,terms):
-    from collections import Counter
-    from math import log
     cnt = Counter()
     tdf = {}
     w = {}
@@ -111,7 +109,7 @@ def idf(doc_list,terms):
     for key in cnt.keys():
         cnt[key] = log(len(doc_list)/cnt[key])
     for doc_no in range(len(doc_list)):
-        w[str(doc_no)] = {}
-        for key in terms:
+        w[str(doc_no)] = defaultdict(float)
+        for key in tdf[str(doc[0])].keys():
             w[str(doc_no)][key] = tdf[str(doc_no)][key] * cnt[key]
-    return w, cnt
+    return w

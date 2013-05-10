@@ -6,7 +6,7 @@
 # Preparations
 import nltk
 from random import shuffle, seed
-from Labb5Functions import my_classify_results,document_features_b,document_features_a
+# from Labb5Functions import my_classify_results,document_features_b,document_features_a
 # from string import punctuation
 # from re import sub, search
 # from nltk.corpus import stopwords
@@ -128,9 +128,41 @@ print my_classify_results(test_true,test_classifed)
 
 
 # Part D)
+# The same problem as with the earlier
 all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
-word_feat = all_words.keys()[10000]
-tdfidf_dict,idf = idf(reviews,word_feat)
-word_feat = [word for word in idf.most_common(1000)]
+word_feat = all_words.keys()[0:10000]
+tdfidf_dict = idf(reviews,word_feat) # Approx 30 seconds when word_feat = 10k
 
+# Biggest difference in idftf between categories, can be seen as cosine "non"-similarity
+term_dict = {}
+result = []
+for term in word_feat:
+    term_dict[term] = [0,0]
+    for doc_no in range(len(reviews)):
+        if reviews[doc_no][1]=="neg":
+            term_dict[term][0] = term_dict[term][0] + tdfidf_dict[str(doc_no)][term]
+        else:
+            term_dict[term][1] = term_dict[term][1] + tdfidf_dict[str(doc_no)][term]
+    result.append([abs(term_dict[term][0]-term_dict[term][1]),term])
+
+result = sorted(result,reverse = True)
+word_feat = [word[1] for word in result[0:50]]
 featureset = [(document_features_a(d,word_feat), c) for (d,c) in reviews]
+train_set, dev_set, test_set = featureset[600:],featureset[400:600], featureset[:400]
+classifier_d = nltk.NaiveBayesClassifier.train(train_set)
+
+# Classifying the test set
+test_classifed = [classifier_d.classify(fs[0]) for fs in test_set]
+test_true = [fs[1] for fs in test_set]
+# Calculating accuracy, precision etc.
+print my_classify_results(test_true,test_classifed)
+
+#Accuracy : 0.7125
+#Precision : 0.715846994536
+#Recall : 0.675257731959
+#F-value : 0.694960212202
+
+# Part E
+# read in negative and positive words only
+raw.pos = open("/OpinLex/positive-words.txt").read()
+
