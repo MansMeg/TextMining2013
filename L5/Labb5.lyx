@@ -92,20 +92,20 @@ nltk
 \end_layout
 
 \begin_layout Standard
-We used 10 % of the corpus (or the reviews) as a test set (randomly selected)
- for testing the accuracy of the model.
+We used 10 % of the corpus (the reviews) as a test set (randomly selected)
+ for testing the accuracy of the final models.
  We also set aside 5 % of the corpus to use as a development set to be able
  to identify potential problems in the modeling of the data without studying
  the results in the test set specifically.
 \end_layout
 
 \begin_layout Standard
-Using the naive bayesian classifier with the feature set 
+Using the naive bayesian classifier with the featureset 
 \family typewriter
 contains:[word]
 \family default
  resulted in a quite good classifier (especially compared with the other
- classifiers tested).
+ classifiers tested in this lab).
  The result of this classifier were:
 \end_layout
 
@@ -156,9 +156,17 @@ end{verbatim}
 In general for Måns it was a quite different way of representing features
  in the model this way.
  The way the features is expressed (as items in a hash table) is not very
- common in the way featutres is expressed in machine learning and in statistics.
+ common in the way features is expressed in machine learning and in statistics.
  Is there any benefits of using this way of features definitions instead
- of using an ordinary matrix notation? Leif?
+ of using an ordinary matrix notation used in 
+\begin_inset Quotes eld
+\end_inset
+
+ordinary statistics
+\begin_inset Quotes erd
+\end_inset
+
+?
 \end_layout
 
 \begin_layout Section*
@@ -177,8 +185,9 @@ uninteresting
 \end_inset
 
  data such as stop words, punctuations and numbers.
- By removing stopwords, punctuations and numbers the classifier were slightly
- improved and we got the following results when classifying the test data:
+ By removing stop words, punctuations and numbers the classifier were slightly
+ improved the model and we got the following results when classifying the
+ test data set:
 \end_layout
 
 \begin_layout Standard
@@ -231,8 +240,8 @@ But when we used lemmatization and/or stemming with the same featureset
 contains:[word]
 \family default
 , we instead reduced the classifier accuracy.
- The reason for this is that probably different inflextions of the same
- word can have a limited effect in the classification when the inflextions
+ The reason for this is that probably different inflections of the same
+ word can have a limited effect in the classification when the inflections
  are removed.
  One example of this is the word 
 \family typewriter
@@ -246,9 +255,10 @@ neg
 \family typewriter
 fail
 \family default
- do not have almost any effect on the likelihhod of the different cetegories.
- So in the naive bayes classifier normalizing word using stemming and/or
- lemmatization does not necessarily improves the classification performance.
+ do not have almost any effect on the likelihood of the different categories.
+ So using the naive bayes classifier and normalizing words using stemming
+ and/or lemmatization does not necessarily improves the classification performan
+ce.
  And this is of course true for all classifiers, not just the naive bayes
  classifier.
  
@@ -257,11 +267,14 @@ fail
 \begin_layout Standard
 It is interesting to see the effect of removing stop words, numbers and
  punctuations.
- By removing these tokens the classification accuracy were increased.
- As a comparison, when another 1000 word/tokes were incuded (instead of
- just 1000, 2000 were used), the accuracy were only increased to 0.79 from
- 0.7525, so the naive bayesian classifier were hence better when noninformative
+ By removing these tokens the classification accuracy increased slightly
+ (by 0.02).
+ So the naive bayesian classifier were hence better when a few non-informative
  features were excluded.
+ As a comparison, when another 1000 word/tokes were included (instead of
+ the 1000 most common words, the 2000 most common words were used), the
+ accuracy increased to 0.79 from 0.7525.
+ 
 \end_layout
 
 \begin_layout Section*
@@ -270,20 +283,21 @@ c)
 
 \begin_layout Standard
 To continue with the modeling of the text data both document length and
- avarage word length were included.
- We also inluded the number of times a specific word were included in the
- model.
- The main problem that we encounter were that even though if there are many
- words just including bins for the number of words in the models results
- in two many features for the data with overfitting as a result.
- There are just too many rare features that is used in the model.
+ average word length were included as features in the model.
+ We also included the number of times a specific word were included in the
+ model (counts).
+ The main problem that we encounter were that even since there are many
+ words included in the model, the result of including (binned) counts in
+ the model increases the number of features dramatically and this resulted
+ in an over-fitting of the model.
+ There are just too many features that is used in the model.
 \end_layout
 
 \begin_layout Standard
-To reduce the risk of overfitting we only included the count of words with
- the bins 0,1 and 2-, but even with this small addition to the number of
- features the model were overfited with poor accuracy as a result.
- This gave the following results:
+To reduce the risk of over-fitting we only included the count of words with
+ the bins 0,1 and 2+ words, but even with this small addition to the number
+ of features, the model were over-fitted with poor accuracy as a result.
+ This model gave the following results for the test data:
 \end_layout
 
 \begin_layout Standard
@@ -331,10 +345,18 @@ end{verbatim}
 
 \begin_layout Standard
 To reduce the risk as much as possible we tried that instead of studying
- the number of features this way we instead used a lexical approach were
- we counted the number of positive words and negative words in each documents
- and only used the number of these as features instead.
- The negativ and positive words were found 
+ the number of features this way we instead used a 
+\begin_inset Quotes eld
+\end_inset
+
+lexical approach
+\begin_inset Quotes erd
+\end_inset
+
+ were we counted the number of positive words and negative words in each
+ document.
+ The negative and positive words, that is often used in opinion mining,
+ were found 
 \color blue
 
 \begin_inset CommandInset href
@@ -354,8 +376,8 @@ The positive and negative word lexical method were used simply by counting
  the number of positive and negative words in each document.
  The number of positive and negative words were then categorized into 10
  bins (based on the quantiles) and used as features.
- By only using the counts of positive and negative words the classification
- accuracy were quite high:
+ By only using the counts of positive and negative words (a total of 20
+ features) the classification accuracy were quite high:
 \end_layout
 
 \begin_layout Standard
@@ -402,9 +424,9 @@ end{verbatim}
 \end_layout
 
 \begin_layout Standard
-When we included the 1000 most common words in the classifieras (as in a)
- together with the counts of positive and negative word the classifier is
- a little better than the classifier in a, but not much better.
+When we included the 1000 most common words in the classifiers (as in section
+ a) together with the counts of positive and negative word the classifier
+ is a little better than the classifier in a, but not much better:
 \end_layout
 
 \begin_layout Standard
@@ -451,8 +473,9 @@ end{verbatim}
 \end_layout
 
 \begin_layout Standard
-So the main conclution is that it is hard to get the classifier to do much
- better than an accuracy of approximately 80%.
+So the main conclusion is that it is hard to get the classifier to do much
+ better than an accuracy of approximately 80% using the Naive Bayesian classifye
+r with this data.
 \end_layout
 
 \begin_layout Section*
@@ -462,8 +485,9 @@ d)
 \begin_layout Standard
 As a last thing we also tried using the tf-idf weighted features.
  Since the results in c) resulted in that just adding one more bin than
- compared with part a) the tf-idf weighted features would have the same
- problem if the tf-idf features just were used instead of ordinary counts.
+ compared with part a) resultet in a heavily over-fitted model our guess
+ were that the tf-idf weighted features would have the same problem, if
+ the tf-idf features just were used instead of ordinary counts.
 \end_layout
 
 \begin_layout Standard
@@ -472,24 +496,17 @@ Instead we tried to use the tf-idf to identify which features that is of
  So what we did was that we computed the tf-idf for all documents (or reviews).
  We then summed the tf-idf for the negative documents and the positive documents
  and calculated the difference between the sums of the two classes.
- In a sence the purpose was to mimic the cosin similarity but at the term
- level, but insted calculate 
-\begin_inset Quotes eld
-\end_inset
-
-cosine dissimilarity
-\begin_inset Quotes erd
-\end_inset
-
-.
+ The purpose was to mimic the cosine similarity but at the term level (instead
+ of the document level), but instead be intereseted in the terms with a
+ large cosine difference.
 \end_layout
 
 \begin_layout Standard
-This resulted in that word such as boring, worse, realistic, superb etc
+This resulted in that word such as boring, worse, realistic, superb etc.
  were identified as having the largest tf-idf difference between neg and
  pos categories.
- In the classifier where only the 50 words with the largest difference of
- tf-idf were included gave a quite good classifying result:
+ We then included the 50 words with the largest differencein the model with
+ quite good classifying result:
 \end_layout
 
 \begin_layout Standard
