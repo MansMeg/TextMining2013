@@ -113,3 +113,34 @@ def idf(doc_list,terms):
         for key in tdf[str(doc[0])].keys():
             w[str(doc_no)][key] = tdf[str(doc_no)][key] * cnt[key]
     return w
+
+
+def document_features_posneg(document,pos_set,neg_set):
+    word_cnt_cut = [11,15,18,22,25,29,32,38,45,999]
+    #[   1.,   15.,   22.,   29.,   37.,  131.]
+    #[  0.,  16.,  22.,  29.,  38.,  95.]
+    pos_cnt = 0
+    neg_cnt = 0    
+    # Count pos/neg
+    for word in document:
+        if word in pos_set:
+            pos_cnt += 1 
+        if word in neg_set:
+            neg_cnt += 1
+    # Pos and neg count categories
+    pos_cut = cut([pos_cnt],word_cnt_cut[0:-1],word_cnt_cut[-1])
+    neg_cut = cut([neg_cnt],word_cnt_cut[0:-1],word_cnt_cut[-1])
+    
+    # Compute features
+    features = {}
+    for part in word_cnt_cut:
+       features['pos_cut_(%s)' % part] = part == pos_cut[0]
+       features['neg_cut_(%s)' % part] = part == neg_cut[0]
+    
+    return features #,pos_cnt,neg_cnt
+
+# Debugging:
+#pos = [document_features_posneg(document[0],pos_set,neg_set) for document in reviews]
+#neg = [document_features_posneg(document[0],pos_set,neg_set)[1] for document in reviews]
+#scipy.stats.mstats.mquantiles(pos,[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+#scipy.stats.mstats.mquantiles(neg,[0,0.2,0.4,0.6,0.8,1])

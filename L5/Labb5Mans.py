@@ -164,5 +164,22 @@ print my_classify_results(test_true,test_classifed)
 
 # Part E
 # read in negative and positive words only
-raw.pos = open("/OpinLex/positive-words.txt").read()
+import os
+os.getcwd()
+raw_pos = open("TextMining2013/L5/OpinLex/positive-words.txt").read()
+raw_neg = open("TextMining2013/L5/OpinLex/negative-words.txt").read()
+pos_set = set(raw_pos.split("\n"))
+neg_set = set(raw_neg.split("\n"))
+
+# Feature set is created
+featureset = [(document_features_posneg(d,pos_set,neg_set), c) for (d,c) in reviews]
+# Feature set is devided in train, dev and test sets
+train_set, dev_set, test_set = featureset[600:],featureset[400:600], featureset[:400]
+classifier_posneg = nltk.NaiveBayesClassifier.train(train_set)
+
+# Classifying the test set
+test_classifed = [classifier_posneg.classify(fs[0]) for fs in test_set]
+test_true = [fs[1] for fs in test_set]
+print my_classify_results(test_true,test_classifed)
+
 
